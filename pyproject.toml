@@ -1,0 +1,47 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ix-gabriella"
+version = "0.1.0"
+description = "Brain-integrated LLM-ready governed local voice/chat assistant with GUI, approvals, memory controls, receipts, and IX-Gabriella-Brain cognition."
+readme = "README.md"
+requires-python = ">=3.11"
+license = {text = "Source-Available Noncommercial Evaluation License v1.0"}
+authors = [{name = "Bryce Lovell"}]
+keywords = ["virtual-assistant", "voice-ux", "governance", "receipts", "privacy", "llm", "cognitive-architecture"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Typing :: Typed",
+]
+
+[project.scripts]
+ix-gabriella = "ix_assistant_core.assistant.cli:main"
+ix-gabriella-chat = "ix_assistant_core.assistant.repl:main"
+ix-gabriella-gui = "ix_assistant_core.gui.server:main"
+ix-gabriella-quality = "ix_assistant_core.quality:main"
+ix-gabriella-brain = "ix_gabriella_brain.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+addopts = "-q"
+
+[tool.ruff]
+line-length = 96
+target-version = "py311"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "SIM"]
+ignore = []
+
+[tool.setuptools.package-data]
+ix_assistant_core = ["gui/static/*"]

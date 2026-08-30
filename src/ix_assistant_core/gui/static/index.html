@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>IX-Gabriella Local Assistant</title>
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+  <main class="app-shell">
+    <section class="hero">
+      <div>
+        <p class="eyebrow">IX-Gabriella</p>
+        <h1>Gabriella listens, checks, then acts.</h1>
+        <p class="subhead">Use typed chat or browser microphone dictation. Risky actions show an approval preview before execution.</p>
+      </div>
+      <div class="status-card" aria-live="polite">
+        <span class="dot" id="statusDot"></span>
+        <span id="statusText">Connecting...</span>
+      </div>
+    </section>
+
+    <section class="workspace">
+      <div class="chat-panel">
+        <div id="chatLog" class="chat-log" aria-live="polite"></div>
+        <div id="pendingBox" class="pending-box hidden">
+          <p id="pendingText"></p>
+          <div class="button-row">
+            <button id="approveBtn" class="primary">Approve</button>
+            <button id="rejectBtn">Reject</button>
+          </div>
+          <div class="correction-row">
+            <input id="correctionInput" type="text" />
+            <button id="correctBtn">Correct</button>
+          </div>
+        </div>
+        <form id="chatForm" class="input-row">
+          <button id="micBtn" type="button" class="mic" aria-label="Speak to Gabriella">🎙</button>
+          <input id="messageInput" type="text" autocomplete="off" />
+          <button type="submit" class="primary">Send</button>
+        </form>
+        <div class="toggles">
+          <label><input id="speakToggle" type="checkbox" checked /> Speak replies</label>
+          <label><input id="receiptToggle" type="checkbox" checked /> Show receipt summary</label>
+        </div>
+      </div>
+
+      <aside class="side-panel">
+        <section>
+          <h2>Last interpretation</h2>
+          <dl id="interpretation" class="facts">
+            <dt>Heard</dt><dd>None yet</dd>
+            <dt>Intent</dt><dd>None yet</dd>
+            <dt>Status</dt><dd>Idle</dd>
+            <dt>Confidence</dt><dd>None yet</dd>
+          </dl>
+        </section>
+        <section>
+          <h2>Receipts</h2>
+          <p id="receiptSummary">No receipts yet.</p>
+          <a href="/api/export/receipts" target="_blank" rel="noreferrer">Export receipts JSON</a>
+        </section>
+        <section>
+          <h2>Voice support</h2>
+          <p id="voiceSupport">Checking browser support...</p>
+        </section>
+      </aside>
+    </section>
+  </main>
+  <script src="/static/app.js"></script>
+</body>
+</html>

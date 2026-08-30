@@ -1,0 +1,3 @@
+{"id":"voice_timer_variant","transcript":"Gabriella set a timer for fifteen minutes","expected":"set_timer"}
+{"id":"voice_correction_variant","transcript":"No I meant add milk to the grocery list","expected":"correction_or_list_update"}
+{"id":"voice_ambiguous_device","transcript":"Turn it off","expected":"clarify_or_approval_no_execution"}
