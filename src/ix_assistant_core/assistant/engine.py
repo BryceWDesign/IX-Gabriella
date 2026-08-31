@@ -140,7 +140,9 @@ class GabriellaAssistant:
                 "monetize",
             )
         )
-        if local_intent.kind in {IntentKind.SMALL_TALK, IntentKind.SHOW_HELP} and local_intent.confidence >= 0.70:
+        if local_intent.kind == IntentKind.SMALL_TALK and local_intent.confidence >= 0.70:
+            intent = local_intent
+        elif local_intent.kind == IntentKind.SHOW_HELP and local_intent.confidence >= 0.70 and not complex_question:
             intent = local_intent
         elif local_intent.kind == IntentKind.ANSWER_QUESTION and local_intent.confidence >= 0.60 and not complex_question:
             intent = local_intent

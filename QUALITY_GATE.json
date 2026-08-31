@@ -3,8 +3,8 @@
   "version": "0.1.0-embedded-model",
   "compileall": true,
   "pytest_exit_code": 1,
-  "llm_eval_exit_code": 1,
-  "manifest_entries": 161,
+  "llm_eval_exit_code": 0,
+  "manifest_entries": 162,
   "forbidden_marker_findings": {},
   "passed": false
 }
