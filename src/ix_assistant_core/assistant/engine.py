@@ -110,7 +110,11 @@ class GabriellaAssistant:
             brain_packet=packet.to_dict(),
             approved_memories=tuple(record.text for record in self.memory.list()),
         )
-        intent = bridge.intent or self.parser.parse(transcript)
+        local_intent = self.parser.parse(transcript)
+        if local_intent.kind == IntentKind.SMALL_TALK and local_intent.confidence >= 0.70:
+            intent = local_intent
+        else:
+            intent = bridge.intent or local_intent
         plan = self.planner.plan(intent)
         policy = self.policy.evaluate(plan)
         receipt_ids: list[str] = []
@@ -322,7 +326,9 @@ class GabriellaAssistant:
             query = str(slots.get("query") or intent.raw_text)
             self.local_store.save_draft(kind="search_request", title=query, body=query)
             return f"Search request prepared for review: {query}."
-        if kind in {IntentKind.ANSWER_QUESTION, IntentKind.SMALL_TALK, IntentKind.SHOW_HELP}:
+        if kind in {IntentKind.SMALL_TALK, IntentKind.SHOW_HELP}:
+            return self.responder.answer(intent)
+        if kind == IntentKind.ANSWER_QUESTION:
             if llm_result is not None and llm_result.response_text and llm_result.confidence >= 0.55:
                 return llm_result.response_text
             return self.responder.answer(intent)

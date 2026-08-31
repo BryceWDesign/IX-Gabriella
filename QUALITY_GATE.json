@@ -4,7 +4,7 @@
   "compileall": true,
   "pytest_exit_code": 0,
   "llm_eval_exit_code": 0,
-  "manifest_entries": 158,
+  "manifest_entries": 159,
   "forbidden_marker_findings": {},
   "passed": true
 }
