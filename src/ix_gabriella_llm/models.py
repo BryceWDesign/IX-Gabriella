@@ -7,8 +7,17 @@ from typing import Any
 
 class LLMProviderMode(StrEnum):
     LOCAL_GABRIELLA = "local_gabriella"
+    EMBEDDED_TINY = "embedded_tiny"
     OPENAI_COMPATIBLE = "openai_compatible"
+    OLLAMA = "ollama"
+    FALLBACK = "fallback"
     DISABLED = "disabled"
+
+
+class LLMRisk(StrEnum):
+    LOW = "low"
+    MEDIUM = "medium"
+    HIGH = "high"
 
 
 @dataclass(frozen=True, slots=True)
@@ -20,11 +29,16 @@ class LLMRequest:
     blocked_effects: tuple[str, ...] = ()
     max_output_chars: int = 2400
     temperature: float = 0.15
+    memory_context: tuple[str, ...] = ()
+    correction_context: tuple[str, ...] = ()
+    require_structured: bool = True
 
     def to_dict(self) -> dict[str, Any]:
         data = asdict(self)
         data["allowed_tools"] = list(self.allowed_tools)
         data["blocked_effects"] = list(self.blocked_effects)
+        data["memory_context"] = list(self.memory_context)
+        data["correction_context"] = list(self.correction_context)
         return data
 
 
@@ -36,6 +50,7 @@ class LLMResponse:
     proposed_tools: tuple[str, ...] = ()
     safety_flags: tuple[str, ...] = ()
     raw: dict[str, Any] = field(default_factory=dict)
+    structured: dict[str, Any] = field(default_factory=dict)
 
     def __post_init__(self) -> None:
         object.__setattr__(self, "confidence", max(0.0, min(1.0, float(self.confidence))))
@@ -61,6 +76,9 @@ class DeliberationResult:
     safety_flags: tuple[str, ...] = ()
     blocked_tool_attempts: tuple[str, ...] = ()
     critique: tuple[str, ...] = ()
+    repair_used: bool = False
+    structured_valid: bool = False
+    intelligence_ceiling_note: str = "model-dependent"
 
     def __post_init__(self) -> None:
         object.__setattr__(self, "confidence", max(0.0, min(1.0, float(self.confidence))))
@@ -74,4 +92,19 @@ class DeliberationResult:
         data["safety_flags"] = list(self.safety_flags)
         data["blocked_tool_attempts"] = list(self.blocked_tool_attempts)
         data["critique"] = list(self.critique)
+        return data
+
+
+@dataclass(frozen=True, slots=True)
+class LLMStackHealth:
+    configured_mode: LLMProviderMode
+    has_external_provider: bool
+    has_structured_contract: bool
+    has_fallback: bool
+    expected_standalone_score: float
+    expected_with_strong_model_score: float
+
+    def to_dict(self) -> dict[str, Any]:
+        data = asdict(self)
+        data["configured_mode"] = self.configured_mode.value
         return data

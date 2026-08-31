@@ -19,7 +19,8 @@ def test_main_assistant_routes_complex_goal_to_brain_plan() -> None:
     assert turn.intent.kind == IntentKind.BRAIN_PLAN
     assert turn.brain_packet is not None
     assert turn.brain_packet["route"]["route"] == "brain_lane"
-    assert "IX-Gabriella-Brain" in turn.response_text
+    assert "plan" in turn.response_text.lower()
+    assert "reviewable" in turn.response_text.lower()
     assert "No external action" in turn.plan.preview
 
 

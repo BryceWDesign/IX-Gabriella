@@ -50,6 +50,7 @@ class GabriellaRequestHandler(BaseHTTPRequestHandler):
                     "voice_output": "browser-speech-synthesis",
                     "brain": "IX-Gabriella-Brain integrated",
                     "llm_layer": self.server.session.assistant.llm.provider.mode.value,
+                    "llm_stack_health": self.server.session.assistant.llm.health().to_dict(),
                 }
             )
             return

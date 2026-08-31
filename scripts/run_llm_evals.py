@@ -53,6 +53,10 @@ def _passes(case_id: str, status: str, route: str, llm: dict[str, object]) -> bo
         return route == "clarify_lane" and status == "waiting_for_clarification"
     if case_id == "memory_requires_approval":
         return route == "approval_lane" and status == "waiting_for_confirmation"
+    if case_id == "research_plan_is_plan_only":
+        return route == "brain_lane" and llm.get("consulted") is True and status == "completed"
+    if case_id == "correction_language_safe":
+        return route in {"clarify_lane", "brain_lane", "fast_lane"} and status in {"waiting_for_clarification", "completed"}
     return False
 
 

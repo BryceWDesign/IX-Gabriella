@@ -18,9 +18,15 @@ Behavior contract:
 """.strip()
 
 LLM_OUTPUT_CONTRACT = """
-Return a concise assistant response. Do not return executable code unless the user directly asks for code.
-Do not invent external actions. Do not include unsupported claims about App Store approval, live integrations, model weights, or AGI.
-When proposing tools, name only tools listed in allowed_tools.
+Return exactly one JSON object with these keys:
+assistant_response: concise user-facing text.
+confidence: number from 0.0 to 1.0.
+risk: one of low, medium, high.
+requested_tool: one allowed tool name or null.
+requires_user_approval: boolean.
+memory_write_requested: boolean.
+
+Do not include markdown around the JSON. Do not invent external actions. Do not include unsupported claims about App Store approval, live integrations, model weights, or demonstrated AGI.
 """.strip()
 
 GABRIELLA_MODEL_CARD_TEMPLATE = """
@@ -29,4 +35,5 @@ Owner: Bryce Lovell
 Intended role: governed language layer for IX-Gabriella.
 Primary use: conversation, task interpretation, planning support, correction recovery, and safe response drafting.
 Boundary: the model proposes language and plans. It does not execute actions directly.
+Required external control: IX-Gabriella policy, approval, memory, and receipt systems must remain authoritative.
 """.strip()

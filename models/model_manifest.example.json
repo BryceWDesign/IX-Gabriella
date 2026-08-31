@@ -1,10 +1,9 @@
 {
   "model_name": "IX-Gabriella-LLM",
   "version": "0.1.0",
-  "artifact_storage": "external",
-  "runtime_modes": ["openai_compatible", "local_runtime"],
-  "direct_action_authority": false,
-  "allowed_role": "draft language, critique plans, ask clarifying questions, propose reviewable steps",
-  "blocked_role": "send messages, modify accounts, write memory without approval, control smart-home devices directly",
-  "owner": "Bryce Lovell"
+  "storage": "external",
+  "runtime_options": ["openai_compatible", "ollama", "llama.cpp_server"],
+  "required_output_contract": "assistant_response/confidence/risk/requested_tool/requires_user_approval/memory_write_requested",
+  "controller_required": true,
+  "direct_side_effects_allowed": false
 }

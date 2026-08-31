@@ -78,7 +78,7 @@ class GabriellaAssistant:
                 execute_fast_locally=False,
             ),
             brain_bridge=BrainBridge(),
-            llm=GabriellaLLMEngine(),
+            llm=GabriellaLLMEngine.persistent(state_dir=root) if persist else GabriellaLLMEngine(),
         )
 
     def handle_text(
@@ -105,7 +105,11 @@ class GabriellaAssistant:
             session_id="ix-gabriella-local-session",
         )
         bridge = self.brain_bridge.to_core_intent(packet, transcript)
-        llm_result = self.llm.deliberate(user_text=transcript.text, brain_packet=packet.to_dict())
+        llm_result = self.llm.deliberate(
+            user_text=transcript.text,
+            brain_packet=packet.to_dict(),
+            approved_memories=tuple(record.text for record in self.memory.list()),
+        )
         intent = bridge.intent or self.parser.parse(transcript)
         plan = self.planner.plan(intent)
         policy = self.policy.evaluate(plan)
@@ -252,6 +256,7 @@ class GabriellaAssistant:
         )
 
     def correct(self, turn: AssistantTurn, corrected_text: str) -> AssistantTurn:
+        self.llm.record_correction(original=turn.transcript.text, corrected=corrected_text)
         self.receipts.append(
             intent_id=turn.intent.intent_id,
             event_type=ReceiptEventType.CORRECTION_RECORDED,

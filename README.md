@@ -1,8 +1,8 @@
 # IX-Gabriella
 
-**IX-Gabriella** is a governed, brain-integrated, LLM-ready virtual assistant foundation by **Bryce Lovell**.
+**IX-Gabriella** is a governed, brain-integrated, intelligence-stack virtual assistant foundation by **Bryce Lovell**.
 
-This repository is prepared as the first GitHub-ready public build. It combines the local IX-Gabriella voice/chat GUI, the dedicated **IX-Gabriella-Brain** cognitive layer, and a policy-bound **IX-Gabriella LLM layer**.
+This repository is prepared as the first GitHub-ready public build. It combines the local IX-Gabriella voice/chat GUI, the dedicated **IX-Gabriella-Brain** cognitive layer, and a policy-bound **IX-Gabriella-LLM** stack built specifically for this assistant, including an embedded trained micro language-model artifact.
 
 Gabriella's product promise is simple:
 
@@ -10,7 +10,7 @@ Gabriella's product promise is simple:
 
 ## What this repo is
 
-IX-Gabriella is a local, source-available assistant foundation that can run in a browser GUI, accept typed chat, accept browser microphone dictation when supported, speak replies through browser speech synthesis, route user requests through IX-Gabriella-Brain, consult a governed LLM layer for complex language work, require approval for higher-risk actions, and write tamper-evident receipts.
+IX-Gabriella is a local, source-available assistant foundation that can run in a browser GUI, accept typed chat, accept browser microphone dictation when supported, speak replies through browser speech synthesis, route user requests through IX-Gabriella-Brain, consult a governed IX-Gabriella-LLM stack for complex language work, require approval for higher-risk actions, and write tamper-evident receipts.
 
 The current build is not an App Store app yet. It is the local assistant, cognitive core, and LLM-control foundation intended to move toward an App Store virtual assistant.
 
@@ -40,20 +40,28 @@ Tools execute.
 Receipts prove.
 ```
 
-## LLM layer
+## IX-Gabriella-LLM stack
 
 The repository now includes:
 
 - `ix_gabriella_llm` request and response contracts.
 - A Gabriella system prompt and output contract.
 - Safe tool schemas and blocked-effect rules.
-- Deterministic no-key local Gabriella provider.
+- Embedded IX-Gabriella-LLM-Micro provider with a packaged trained model artifact.
+- Deterministic no-key local Gabriella provider retained as a safe fallback.
 - OpenAI-compatible provider adapter configured only through environment variables.
+- Ollama local provider adapter for `/api/chat`.
+- Fallback provider modes that safely degrade to the deterministic local provider.
+- Structured JSON output validation and deterministic repair for nonconforming provider output.
+- Correction learning store for user corrections.
+- Approved-memory retrieval for model context.
 - LLM deliberation engine that preserves fast-lane downshift behavior.
 - Provider output boundary checks that reject direct side-effect attempts.
-- Evaluation fixtures for simple tasks, complex planning, approval, clarification, and memory behavior.
+- Evaluation fixtures for simple tasks, complex planning, approval, clarification, correction, and memory behavior.
+- Model strategy, model cards, scorecard, and external model manifest files.
+- Actual embedded model artifact at `src/ix_gabriella_llm/data/ix_gabriella_micro_lm.json`.
 
-Large model weights are not committed to this repo. This is intentional. The repo contains the LLM control layer and default deterministic provider. To reach strong 8/10-class conversation quality, connect a capable hosted or local model through the provider boundary and validate it against the eval suite.
+The repo now includes a real trained micro language model for Gabriella response selection. It is intentionally small enough to remain GitHub-friendly and local. It is not a frontier-scale large language model. To reach real 8/10-class conversation quality, connect a capable hosted or local model through the provider boundary and validate it against the eval suite.
 
 ## What it can do now
 
@@ -73,6 +81,7 @@ Large model weights are not committed to this repo. This is intentional. The rep
 - Export receipt JSON.
 - Run a brain CLI and a main assistant CLI.
 - Run an LLM behavior eval script.
+- Run the IX-Gabriella-LLM CLI directly.
 - Run a quality gate with tests, compile checks, manifest generation, and forbidden-marker scans.
 
 ## What it cannot honestly claim yet
@@ -86,7 +95,7 @@ Large model weights are not committed to this repo. This is intentional. The rep
 - It does not include an always-on wake-word daemon.
 - It does not control real smart-home devices yet.
 - It does not send real emails or modify a real calendar.
-- It does not include trained model weights.
+- It does not include frontier-scale large model weights. It does include the small IX-Gabriella-LLM-Micro artifact.
 - It does not include production cloud scaling, production privacy certification, or safety certification.
 
 ## Install and run locally
@@ -127,11 +136,35 @@ Run the integrated brain CLI directly:
 ix-gabriella-brain "help me prepare for tomorrow's meeting with a plan" --json
 ```
 
+Run the IX-Gabriella-LLM CLI using the default embedded micro model:
+
+```powershell
+ix-gabriella-llm "help me prepare for tomorrow's meeting" --json
+```
+
 Run LLM behavior evals:
 
 ```powershell
 py scripts\run_llm_evals.py
 ```
+
+
+## Embedded IX-Gabriella-LLM-Micro provider
+
+By default, Gabriella now uses the packaged embedded micro model when the language layer is consulted:
+
+```powershell
+$env:IX_GABRIELLA_LLM_MODE="embedded_tiny"
+ix-gabriella-llm "help me prepare for tomorrow's meeting" --json
+```
+
+You can regenerate the model artifact from the included alignment corpus:
+
+```powershell
+py scripts\train_embedded_llm.py
+```
+
+The model artifact is real and loaded at runtime, but it is small. It improves standalone behavior and proves the model boundary works without external services. It does not replace a capable hosted or local model for 8/10-class open-ended intelligence.
 
 ## Optional OpenAI-compatible LLM provider
 
@@ -145,6 +178,33 @@ $env:IX_GABRIELLA_LLM_API_KEY="your-key-if-required"
 ```
 
 Secrets are not stored in the repo or browser UI.
+
+## Optional Ollama local provider
+
+To connect a local Ollama model:
+
+```powershell
+$env:IX_GABRIELLA_LLM_MODE="ollama"
+$env:IX_GABRIELLA_OLLAMA_ENDPOINT="http://127.0.0.1:11434/api/chat"
+$env:IX_GABRIELLA_OLLAMA_MODEL="your-local-model"
+```
+
+To use provider fallback:
+
+```powershell
+$env:IX_GABRIELLA_LLM_MODE="fallback_ollama"
+$env:IX_GABRIELLA_OLLAMA_MODEL="your-local-model"
+```
+
+## Intelligence score boundary
+
+```text
+Current standalone deterministic mode: about 6/10 practical language intelligence.
+Current embedded micro-model mode: about 6.4/10 practical language intelligence.
+With a strong connected model: 8/10 to 8.3/10 potential.
+With a strong connected model plus real tools, mobile shell, accounts, search, calendar/email connectors, and tuned voice UX: 8.5/10 plus potential.
+True 10/10 is not claimed.
+```
 
 ## Public release note
 

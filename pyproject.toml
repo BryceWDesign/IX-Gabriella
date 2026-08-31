@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "ix-gabriella"
 version = "0.1.0"
-description = "Brain-integrated LLM-ready governed local voice/chat assistant with GUI, approvals, memory controls, receipts, and IX-Gabriella-Brain cognition."
+description = "Brain-integrated governed local voice/chat assistant with GUI, approvals, receipts, IX-Gabriella-Brain cognition, and an embedded IX-Gabriella-LLM-Micro model artifact."
 readme = "README.md"
 requires-python = ">=3.11"
 license = {text = "Source-Available Noncommercial Evaluation License v1.0"}
@@ -25,6 +25,7 @@ ix-gabriella-chat = "ix_assistant_core.assistant.repl:main"
 ix-gabriella-gui = "ix_assistant_core.gui.server:main"
 ix-gabriella-quality = "ix_assistant_core.quality:main"
 ix-gabriella-brain = "ix_gabriella_brain.cli:main"
+ix-gabriella-llm = "ix_gabriella_llm.cli:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
@@ -45,3 +46,4 @@ ignore = []
 
 [tool.setuptools.package-data]
 ix_assistant_core = ["gui/static/*"]
+ix_gabriella_llm = ["data/*.json"]

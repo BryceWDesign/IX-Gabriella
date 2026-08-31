@@ -1,10 +1,10 @@
 {
   "project": "IX-Gabriella",
-  "version": "0.1.0-brain-integrated-llm-ready",
+  "version": "0.1.0-embedded-model",
   "compileall": true,
   "pytest_exit_code": 0,
   "llm_eval_exit_code": 0,
-  "manifest_entries": 137,
+  "manifest_entries": 158,
   "forbidden_marker_findings": {},
   "passed": true
 }

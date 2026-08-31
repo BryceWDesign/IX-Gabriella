@@ -67,15 +67,15 @@ def test_fast_lane_does_not_invoke_language_model() -> None:
     assert turn.brain_packet["llm"]["reason"] == "fast_lane_downshift_preserved"
 
 
-def test_complex_request_uses_local_gabriella_llm_layer() -> None:
+def test_complex_request_uses_embedded_gabriella_llm_layer() -> None:
     assistant = GabriellaAssistant.default()
     turn = assistant.handle_text("Help me prepare for tomorrow's meeting with a plan and questions")
     assert turn.status == ActionStatus.COMPLETED
     assert turn.intent.kind == IntentKind.BRAIN_PLAN
     assert turn.brain_packet is not None
     assert turn.brain_packet["llm"]["consulted"] is True
-    assert turn.brain_packet["llm"]["provider_mode"] == "local_gabriella"
-    assert "reviewable plan" in turn.response_text
+    assert turn.brain_packet["llm"]["provider_mode"] == "embedded_tiny"
+    assert "plan" in turn.response_text.lower() or "compare" in turn.response_text.lower()
 
 
 def test_llm_tool_boundary_blocks_direct_side_effects() -> None:

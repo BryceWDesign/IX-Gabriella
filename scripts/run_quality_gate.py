@@ -64,7 +64,7 @@ def main() -> int:
     )
     summary = {
         "project": "IX-Gabriella",
-        "version": "0.1.0-brain-integrated-llm-ready",
+        "version": "0.1.0-embedded-model",
         "compileall": compile_ok,
         "pytest_exit_code": pytest.returncode,
         "llm_eval_exit_code": llm_evals.returncode,
