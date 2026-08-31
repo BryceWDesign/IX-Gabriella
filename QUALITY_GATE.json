@@ -2,9 +2,9 @@
   "project": "IX-Gabriella",
   "version": "0.1.0-embedded-model",
   "compileall": true,
-  "pytest_exit_code": 0,
-  "llm_eval_exit_code": 0,
-  "manifest_entries": 159,
+  "pytest_exit_code": 1,
+  "llm_eval_exit_code": 1,
+  "manifest_entries": 161,
   "forbidden_marker_findings": {},
-  "passed": true
+  "passed": false
 }

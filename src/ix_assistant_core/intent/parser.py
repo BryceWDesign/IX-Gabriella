@@ -33,7 +33,7 @@ class RuleBasedIntentParser:
         best_hits: list[str] = []
 
         for rule in self.rules:
-            hits = [keyword for keyword in rule.keywords if keyword in normalized or keyword in tokens]
+            hits = [keyword for keyword in rule.keywords if _keyword_matches(keyword, normalized, tokens)]
             if not hits:
                 continue
             if best_rule is None or len(hits) > len(best_hits) or rule.confidence > best_rule.confidence:
@@ -153,6 +153,13 @@ def _default_rules() -> tuple[IntentRule, ...]:
         ),
     )
 
+
+
+def _keyword_matches(keyword: str, normalized: str, token_set: set[str]) -> bool:
+    key = keyword.lower().strip()
+    if " " in key:
+        return key in normalized
+    return key in token_set
 
 def _normalize(text: str) -> str:
     text = _WAKE_WORDS_RE.sub("", text)

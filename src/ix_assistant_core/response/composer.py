@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from datetime import date, datetime
+
 from ix_assistant_core.identity import ASSISTANT_NAME, PRODUCT_PROMISE, PROJECT_NAME
 from ix_assistant_core.models import DecodedIntent, IntentKind
 
@@ -12,6 +14,15 @@ class ResponseComposer:
         if intent.kind == IntentKind.SHOW_HELP:
             return self.capabilities()
         if intent.kind == IntentKind.SMALL_TALK:
+            if "how are you" in text or "how are you doing" in text:
+                return (
+                    f"{ASSISTANT_NAME} is running locally and ready to help. "
+                    "Simple requests stay fast, and risky actions still require approval."
+                )
+            if "your name" in text or "who are you" in text:
+                return f"I am {ASSISTANT_NAME}, the assistant persona for {PROJECT_NAME}."
+            if text in {"hello", "hi", "hey"} or text.startswith("good morning") or text.startswith("good afternoon") or text.startswith("good evening"):
+                return f"Hello. I am {ASSISTANT_NAME}. What would you like me to help with?"
             return (
                 f"I am {ASSISTANT_NAME}. I can listen, show what I heard, "
                 "ask before risky actions, and keep receipts."
@@ -33,10 +44,16 @@ class ResponseComposer:
         if "why" in text and "ask" in text and "act" in text:
             return f"Because {PRODUCT_PROMISE}. Decoded intent is a proposal, not permission."
         if text.endswith("?") or intent.kind == IntentKind.ANSWER_QUESTION:
+            if "what time" in text or "current time" in text:
+                now = datetime.now()
+                return f"The local time is {now.strftime('%I:%M %p').lstrip('0')}."
+            if "what day" in text or "what date" in text or "today" in text:
+                today = date.today()
+                return f"Today is {today.strftime('%A, %B')} {today.day}, {today.year}."
             return (
-                "I can answer simple local questions now. For broad web knowledge "
-                "or ChatGPT-level reasoning, connect a reviewed model provider behind "
-                "the same policy gate."
+                "I can route that as a factual question, but this local build does not have "
+                "a verified knowledge connector active for broad factual answers. Connect a "
+                "reviewed LLM or search provider behind the same policy gate for that."
             )
         return self.capabilities()
 

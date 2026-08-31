@@ -111,7 +111,38 @@ class GabriellaAssistant:
             approved_memories=tuple(record.text for record in self.memory.list()),
         )
         local_intent = self.parser.parse(transcript)
-        if local_intent.kind == IntentKind.SMALL_TALK and local_intent.confidence >= 0.70:
+        local_question_text = local_intent.normalized_text
+        complex_question = any(
+            signal in local_question_text
+            for signal in (
+                "plan",
+                "prepare",
+                "strategy",
+                "compare",
+                "analyze",
+                "research",
+                "organize",
+                "project",
+                "roadmap",
+                "architecture",
+                "workflow",
+                "upgrade",
+                "design",
+                "investigate",
+                "summarize",
+                "recommend",
+                "diagnose",
+                "decide",
+                "evaluate",
+                "build",
+                "create",
+                "launch",
+                "monetize",
+            )
+        )
+        if local_intent.kind in {IntentKind.SMALL_TALK, IntentKind.SHOW_HELP} and local_intent.confidence >= 0.70:
+            intent = local_intent
+        elif local_intent.kind == IntentKind.ANSWER_QUESTION and local_intent.confidence >= 0.60 and not complex_question:
             intent = local_intent
         else:
             intent = bridge.intent or local_intent
@@ -329,8 +360,6 @@ class GabriellaAssistant:
         if kind in {IntentKind.SMALL_TALK, IntentKind.SHOW_HELP}:
             return self.responder.answer(intent)
         if kind == IntentKind.ANSWER_QUESTION:
-            if llm_result is not None and llm_result.response_text and llm_result.confidence >= 0.55:
-                return llm_result.response_text
             return self.responder.answer(intent)
         if kind == IntentKind.MEMORY_READ:
             count = len(self.memory.list())
